@@ -3,19 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>Tap Game</title>
+
   <style>
     body {
+      margin: 0;
+      height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
       background: #111;
       color: white;
       font-family: Arial, sans-serif;
     }
 
-    .tap {
+    #tap {
       width: 200px;
       height: 200px;
       border-radius: 50%;
@@ -23,23 +25,66 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 24px;
+      font-size: 28px;
       cursor: pointer;
       user-select: none;
+      margin-bottom: 20px;
+    }
+
+    #energy {
+      font-size: 20px;
+      opacity: 0.9;
     }
   </style>
 </head>
+
 <body>
 
-  <div class="tap" onclick="tap()">🔥 0</div>
+  <!-- КНОПКА КЛИКА -->
+  <div id="tap">🔥 0</div>
 
+  <!-- ЭНЕРГИЯ -->
+  <div id="energy">⚡ 100 / 100</div>
+
+  <!-- ЛОГИКА -->
   <script>
-    let count = 0;
+    const tg = window.Telegram?.WebApp;
+    tg?.ready();
+    tg?.expand();
 
-    function tap() {
+    const tap = document.getElementById('tap');
+    const energyEl = document.getElementById('energy');
+
+    let count = Number(localStorage.getItem('count') || 0);
+    let energy = Number(localStorage.getItem('energy') || 100);
+    const maxEnergy = 100;
+
+    tap.innerText = '🔥 ' + count;
+    energyEl.innerText = `⚡ ${energy} / ${maxEnergy}`;
+
+    tap.addEventListener('click', () => {
+      if (energy <= 0) return;
+
       count++;
-      document.querySelector('.tap').textContent = '🔥 ' + count;
-    }
+      energy--;
+
+      tap.innerText = '🔥 ' + count;
+      energyEl.innerText = `⚡ ${energy} / ${maxEnergy}`;
+
+      localStorage.setItem('count', count);
+      localStorage.setItem('energy', energy);
+
+      tg?.HapticFeedback?.impactOccurred('light');
+    });
+
+    // Восстановление энергии
+    setInterval(() => {
+      if (energy < maxEnergy) {
+        energy++;
+        energyEl.innerText = `⚡ ${energy} / ${maxEnergy}`;
+        localStorage.setItem('energy', energy);
+      }
+    }, 1000);
   </script>
 
 </body>
