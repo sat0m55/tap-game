@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <title>Tap Game</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      margin: 0;
-      background: #111;
-      color: white;
-      font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
     }
+
     .tap {
       width: 200px;
       height: 200px;
@@ -24,19 +24,23 @@
       justify-content: center;
       align-items: center;
       font-size: 24px;
+      cursor: pointer;
       user-select: none;
     }
   </style>
 </head>
 <body>
-  <div class="tap" onclick="tap()">👆 ТАП</div>
+
+  <div class="tap" onclick="tap()">🔥 0</div>
 
   <script>
     let count = 0;
+
     function tap() {
       count++;
-      document.querySelector('.tap').innerText = '🔥 ' + count;
+      document.querySelector('.tap').textContent = '🔥 ' + count;
     }
   </script>
+
 </body>
 </html>
