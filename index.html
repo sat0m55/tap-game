@@ -62,23 +62,69 @@
     color: white;
     border: none;
   }
+  #energy-container {
+  width: 220px;
+  height: 16px;
+  background: #333;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+#energy-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #ff9800, #ffc107);
+  transition: width 0.3s ease;
+}
+  .screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+}
+
 </style>
 
 </head>
 
 <body>
 
-  <!-- КНОПКА КЛИКА -->
+<!-- КНОПКА КЛИКА -->
+<div id="screen-tap" class="screen active">
   <div id="tap">🔥 0</div>
 
-<div id="menu">
-  <button>🏠</button>
-  <button>⚡</button>
-  <button>🛒</button>
+  <!-- ЭНЕРГИЯ -->
+  <div id="energy-container">
+    <div id="energy-bar"></div>
+  </div>
+  <div id="energy-text">⚡ 10 / 10</div>
+</div> <!-- ✅ закрыт screen-tap -->
+
+<!-- UPGRADES -->
+<div id="screen-upgrades" class="screen">
+  <h2>Апгрейды</h2>
+  <p>Скоро...</p>
 </div>
 
-  <!-- ЭНЕРГИЯ -->
-  <div id="energy">⚡ 100 / 100</div>
+
+  <!-- PROFILE -->
+  <div id="screen-profile" class="screen">
+    <h2>Профиль</h2>
+    <p>Статистика</p>
+  </div>
+
+  <!-- МЕНЮ -->
+ <div id="menu">
+  <button data-screen="tap">🏠</button>
+  <button data-screen="upgrades">⚡</button>
+  <button data-screen="profile">👤</button>
+</div>
+
+</body>
+
+
 
   <!-- ЛОГИКА -->
   <script>
@@ -87,38 +133,61 @@ tg?.ready();
 tg?.expand();
 
 const tap = document.getElementById('tap');
-const energyEl = document.getElementById('energy');
+const energyBar = document.getElementById('energy-bar');
+const energyText = document.getElementById('energy-text');
 
 let count = Number(localStorage.getItem('count') || 0);
 let energy = Number(localStorage.getItem('energy') || 100);
 const maxEnergy = 100;
 
 tap.innerText = '🔥 ' + count;
-energyEl.innerText = `⚡ ${energy} / ${maxEnergy}`;
+energyText.innerText = `⚡ ${energy} / ${maxEnergy}`;
+energyBar.style.width = (energy / maxEnergy * 100) + '%';
+
+
 
 tap.addEventListener('click', () => {
   if (energy <= 0) return;
-
-  count++;
+    count++;
   energy--;
 
   tap.innerText = '🔥 ' + count;
-  energyEl.innerText = `⚡ ${energy} / ${maxEnergy}`;
+  energyText.innerText = `⚡ ${energy} / ${maxEnergy}`;
+  energyBar.style.width = (energy / maxEnergy * 100) + '%';
 
   localStorage.setItem('count', count);
   localStorage.setItem('energy', energy);
-
   tg?.HapticFeedback?.impactOccurred('light');
+  
 });
+
 
 // восстановление энергии
 setInterval(() => {
   if (energy < maxEnergy) {
     energy++;
-    energyEl.innerText = `⚡ ${energy} / ${maxEnergy}`;
+    energyText.innerText = `⚡ ${energy} / ${maxEnergy}`;
+    energyBar.style.width = (energy / maxEnergy * 100) + '%';
     localStorage.setItem('energy', energy);
   }
 }, 5000);
+    // --- ПЕРЕКЛЮЧЕНИЕ ЭКРАНОВ ---
+const screens = document.querySelectorAll('.screen');
+const menuButtons = document.querySelectorAll('#menu button');
+
+menuButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.screen;
+
+    screens.forEach(screen => {
+      screen.classList.remove('active');
+    });
+
+    document
+      .getElementById('screen-' + target)
+      .classList.add('active');
+  });
+
   </script>
 
 </body>
