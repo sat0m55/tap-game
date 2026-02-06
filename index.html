@@ -2,56 +2,66 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Tap Game</title>
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: #111;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
+<style>
+  * {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-    #tap {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background: orange;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 28px;
-      cursor: pointer;
-      user-select: none;
-      margin-bottom: 20px;
-    }
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #111;
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+  }
 
-   #menu {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  background: #000;
-}
+  #tap {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: orange;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 20px;
+    touch-action: none;
+  }
 
-#menu button {
-  flex: 1;
-  padding: 15px;
-  font-size: 16px;
-  background: #222;
-  color: white;
-  border: none;
-}
- #energy {
-      font-size: 20px;
-      opacity: 0.9;
-    }
-  </style>
+  #energy {
+    font-size: 20px;
+    opacity: 0.9;
+  }
+
+  #menu {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    background: #000;
+  }
+
+  #menu button {
+    flex: 1;
+    padding: 15px;
+    font-size: 16px;
+    background: #222;
+    color: white;
+    border: none;
+  }
+</style>
+
 </head>
 
 <body>
@@ -106,7 +116,7 @@ setInterval(() => {
     energyEl.innerText = `⚡ ${energy} / ${maxEnergy}`;
     localStorage.setItem('energy', energy);
   }
-}, 1000);
+}, 5000);
   </script>
 
 </body>
