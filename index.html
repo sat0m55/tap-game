@@ -31,7 +31,23 @@
       margin-bottom: 20px;
     }
 
-    #energy {
+   #menu {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  background: #000;
+}
+
+#menu button {
+  flex: 1;
+  padding: 15px;
+  font-size: 16px;
+  background: #222;
+  color: white;
+  border: none;
+}
+ #energy {
       font-size: 20px;
       opacity: 0.9;
     }
@@ -43,48 +59,54 @@
   <!-- КНОПКА КЛИКА -->
   <div id="tap">🔥 0</div>
 
+<div id="menu">
+  <button>🏠</button>
+  <button>⚡</button>
+  <button>🛒</button>
+</div>
+
   <!-- ЭНЕРГИЯ -->
   <div id="energy">⚡ 100 / 100</div>
 
   <!-- ЛОГИКА -->
   <script>
-    const tg = window.Telegram?.WebApp;
-    tg?.ready();
-    tg?.expand();
+const tg = window.Telegram?.WebApp;
+tg?.ready();
+tg?.expand();
 
-    const tap = document.getElementById('tap');
-    const energyEl = document.getElementById('energy');
+const tap = document.getElementById('tap');
+const energyEl = document.getElementById('energy');
 
-    let count = Number(localStorage.getItem('count') || 0);
-    let energy = Number(localStorage.getItem('energy') || 100);
-    const maxEnergy = 100;
+let count = Number(localStorage.getItem('count') || 0);
+let energy = Number(localStorage.getItem('energy') || 100);
+const maxEnergy = 100;
 
-    tap.innerText = '🔥 ' + count;
+tap.innerText = '🔥 ' + count;
+energyEl.innerText = `⚡ ${energy} / ${maxEnergy}`;
+
+tap.addEventListener('click', () => {
+  if (energy <= 0) return;
+
+  count++;
+  energy--;
+
+  tap.innerText = '🔥 ' + count;
+  energyEl.innerText = `⚡ ${energy} / ${maxEnergy}`;
+
+  localStorage.setItem('count', count);
+  localStorage.setItem('energy', energy);
+
+  tg?.HapticFeedback?.impactOccurred('light');
+});
+
+// восстановление энергии
+setInterval(() => {
+  if (energy < maxEnergy) {
+    energy++;
     energyEl.innerText = `⚡ ${energy} / ${maxEnergy}`;
-
-    tap.addEventListener('click', () => {
-      if (energy <= 0) return;
-
-      count++;
-      energy--;
-
-      tap.innerText = '🔥 ' + count;
-      energyEl.innerText = `⚡ ${energy} / ${maxEnergy}`;
-
-      localStorage.setItem('count', count);
-      localStorage.setItem('energy', energy);
-
-      tg?.HapticFeedback?.impactOccurred('light');
-    });
-
-    // Восстановление энергии
-    setInterval(() => {
-      if (energy < maxEnergy) {
-        energy++;
-        energyEl.innerText = `⚡ ${energy} / ${maxEnergy}`;
-        localStorage.setItem('energy', energy);
-      }
-    }, 1000);
+    localStorage.setItem('energy', energy);
+  }
+}, 1000);
   </script>
 
 </body>
